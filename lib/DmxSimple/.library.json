@@ -1,0 +1,61 @@
+{
+    "name": "DmxSimple", 
+    "version": "3.1", 
+    "keywords": [
+        "communication"
+    ], 
+    "description": "Drive DMX controlled lights and visual effects available from DJ or theatrical suppliers.", 
+    "frameworks": [
+        "arduino"
+    ], 
+    "platforms": [
+        "atmelavr", 
+        "atmelsam", 
+        "espressif32", 
+        "espressif8266", 
+        "intel_arc32", 
+        "microchippic32", 
+        "nordicnrf51", 
+        "nordicnrf52", 
+        "ststm32", 
+        "teensy", 
+        "timsp430"
+    ], 
+    "authors": [
+        {
+            "email": null, 
+            "url": null, 
+            "maintainer": false, 
+            "name": "Peter Knight"
+        }, 
+        {
+            "email": null, 
+            "url": null, 
+            "maintainer": false, 
+            "name": "Tinker.it!"
+        }, 
+        {
+            "email": null, 
+            "url": null, 
+            "maintainer": true, 
+            "name": "Paul Stoffregen"
+        }
+    ], 
+    "repository": {
+        "type": "git", 
+        "url": "https://github.com/PaulStoffregen/DmxSimple"
+    }, 
+    "homepage": "https://code.google.com/p/tinkerit/wiki/DmxSimple", 
+    "export": {
+        "include": null, 
+        "exclude": [
+            "extras", 
+            "docs", 
+            "tests", 
+            "test", 
+            "*.doxyfile", 
+            "*.pdf"
+        ]
+    }, 
+    "id": 898
+}
