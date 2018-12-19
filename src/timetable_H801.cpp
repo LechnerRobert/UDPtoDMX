@@ -1,6 +1,7 @@
 #if USE_H801==1
 // save some unsigned ints
 
+#include <Arduino.h>
 #include "timetable.h"
 
 const PROGMEM  uint_times dimStepTime[5001][8] = {

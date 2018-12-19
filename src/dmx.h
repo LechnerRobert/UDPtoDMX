@@ -8,7 +8,7 @@ class virt_dmxClass
 {
   public:
     void init(uint_dmxChannel maxChannels);
-    uint8_t read(uint_dmxChannel channel);
+    uint_dmxValue read(uint_dmxChannel channel);
     void write(uint_dmxChannel channel, uint_dmxValue value);
     void loop();
 };

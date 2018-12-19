@@ -2,7 +2,7 @@
 #define SIMULATOR_H
 
 #include <inttypes.h>
-#include <Arduino.h>
+#include <string.h>
 #include "log.h"
 #include "helper.h"
 #include "network.h"

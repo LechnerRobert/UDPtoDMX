@@ -1,7 +1,7 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <WString.h>
+#include <WString_.h>
 #include <inttypes.h>
 
 //SPI
@@ -30,7 +30,9 @@ class virt_networkClass
     void loop();
     void Register_OnNetworkData(event_networkData callback);
     void beginPacket();    
-    void print(const __FlashStringHelper *ifsh); 
+    #if (__FlashStringHelper != char)
+      void print(const __FlashStringHelper *ifsh); 
+    #endif
     void print(const int i); 
     void print(const char *c, int charlen = 0); 
     void endPacket();

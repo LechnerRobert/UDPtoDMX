@@ -24,3 +24,14 @@ uint_dmxValue c255(uint8_t proz, uint8_t gamma) {
   }
   return result;
 };
+
+
+uint32_t millis(){
+  struct timeb stop;
+  ftime(&stop);
+  return (uint32_t) (1000 * stop.time + stop.millitm);
+}
+
+uint32_t micros(){
+  return 10;
+}

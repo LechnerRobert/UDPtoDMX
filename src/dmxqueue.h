@@ -5,7 +5,7 @@
 
 typedef
 struct dimItem {
-   uint16_t      dimtime;
+   uint_times    dimtime;
    uint_dmxValue dimTo;
    uint8_t       dimSpeed;
    uint8_t       channelLO;

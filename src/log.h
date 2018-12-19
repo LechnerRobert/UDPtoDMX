@@ -20,7 +20,8 @@
 #else
 
 #include <inttypes.h>
-#include <WString.h>
+#include <WString_.h>
+
 
 void DEBUG_INIT();
 void DEBUG_BEGIN(uint8_t level);

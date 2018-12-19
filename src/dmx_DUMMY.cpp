@@ -1,31 +1,37 @@
-#if USE_ESPDMX == 1
+#if USE_DMXDUMMY == 1
+
 #include "dmx.h"
-#include <Arduino.h>
-#include "ESPDMX.h"
 #include "log.h"
 #include "helper.h"
 
-DMXESPSerial dmx;
+const uint32_t period = maxValue;  //5000 * 200ns ^= 1 kHz
+
+
+uint_dmxValue dmxV[DMX_SIZE];
 uint32_t lastUpdate;
 
 uint_dmxValue virt_dmxClass::read(uint_dmxChannel channel) {
-  return dmx.read(channel);
+  if ((channel > 0) && (channel <= DMX_SIZE)) {
+    return dmxV[channel-1];
+  } else {
+    return 0;
+  }
 };
 
 void virt_dmxClass::write(uint_dmxChannel channel, uint_dmxValue value){
-  dmx.write(channel, value);
+  if ((channel > 0) && (channel <= DMX_SIZE)) {
+    dmxV[channel-1] = value;
+  }
 };
 
 void  virt_dmxClass::init(uint_dmxChannel maxChannels) {
-  DEBUG_PRINT(LOG_INFO, F("Init ESPDMX"));
+  DEBUG_PRINT(LOG_INFO, F("Init DMX DUMMY"));
   lastUpdate = millis();
-  dmx.init(maxChannels);
 };
 
 void  virt_dmxClass::loop() {
-  if (timeDiff(lastUpdate, millis()) > 40) {
+  if (timeDiff(lastUpdate, millis()) > 20) {
     lastUpdate = millis();
-    dmx.update();
   }
 }
 

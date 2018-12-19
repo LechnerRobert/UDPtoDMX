@@ -1,6 +1,7 @@
 #if USE_H801!=1
 // save some unsigned ints
 
+
 #include "timetable.h"
 
 const PROGMEM  uint_times dimStepTime[256][8] = {
@@ -263,6 +264,11 @@ const PROGMEM  uint_times dimStepTime[256][8] = {
 /*255*/ {257, 149, 101, 42, 65535, 65535, 65535, 65535}};
 
 uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma) {
+  #ifdef PROGMEM 
+  return dimStepTime[value][gamma];
+  #else
   return pgm_read_word(&(dimStepTime[value][gamma]));
+  #endif
 }
+
 #endif

@@ -34,7 +34,7 @@ uint32 pwm_duty_init[DMX_SIZE] = {0, 0, 0, 0, 0};
 uint_dmxValue dmxV[DMX_SIZE];
 uint32_t lastUpdate;
 
-uint8_t virt_dmxClass::read(uint_dmxChannel channel) {
+uint_dmxValue virt_dmxClass::read(uint_dmxChannel channel) {
   if ((channel > 0) && (channel <= DMX_SIZE)) {
     return dmxV[channel-1];
   } else {
@@ -49,7 +49,7 @@ void virt_dmxClass::write(uint_dmxChannel channel, uint_dmxValue value){
 };
 
 void  virt_dmxClass::init(uint_dmxChannel maxChannels) {
-  DEBUG_PRINT(LOG_INFO, F("Init ESPDMX"));
+  DEBUG_PRINT(LOG_INFO, F("Init H801 noDMX"));
   lastUpdate = millis();
   pinMode(redPIN, OUTPUT);
   pinMode(greenPIN, OUTPUT);

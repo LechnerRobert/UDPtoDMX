@@ -17,6 +17,7 @@ void workerClass::loop() {
       lastTime = lastTime + RefreshTime;
     } else {
       lastTime = ct;
+      DEBUG_PRINT(LOG_ALERT, F("out of time"));
     }
     step();  
   }
@@ -24,9 +25,10 @@ void workerClass::loop() {
 
 void workerClass::step() { 
   int ch;
-  uint8_t oldValue, newValue;
-  uint8_t chInc, chStep, dimTo;
-  uint16_t divTime;
+  uint_dmxValue oldValue, newValue;
+  uint8_t chInc, chStep;
+  uint_dmxValue dimTo;
+  uint_times divTime;
   dimItem *queueItem;
  /* uint32_t stTime = micros();*/
   for (int i = 0; i < QUEUESIZE; i++) {

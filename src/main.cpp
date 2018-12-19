@@ -1,6 +1,3 @@
-#include <Arduino.h>
-
-
 #include "dmx.h"
 #include "helper.h"
 #include "log.h"
@@ -148,4 +145,13 @@ void loop() {
   worker.loop();
   simulator.loop();
 
+}
+
+int main(int argc, char const *argv[])
+{
+  setup();
+  while (true) {
+    loop();
+  }
+  return 0;
 }

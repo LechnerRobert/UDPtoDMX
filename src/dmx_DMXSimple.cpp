@@ -4,7 +4,7 @@
 #include "log.h"
 
 
-uint8_t virt_dmxClass::read(uint_dmxChannel channel) {
+uint_dmxValue virt_dmxClass::read(uint_dmxChannel channel) {
   return DmxSimple.read(channel);
 };
 
