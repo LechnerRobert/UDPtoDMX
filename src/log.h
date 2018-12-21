@@ -27,7 +27,7 @@
 void DEBUG_INIT();
 void DEBUG_BEGIN(uint8_t level);
 void DEBUG_PRINT(const char *c); 
-#if (__FlashStringHelper != char)
+#ifdef ARDUINO
 void DEBUG_PRINT(const __FlashStringHelper *ifsh); 
 #endif
 void DEBUG_PRINT(const int i); 

@@ -1,7 +1,6 @@
-#if USE_H801==1
+#if (USE_H801!=0) || (USE_DMXDUMMY!=0)
 // save some unsigned ints
 
-#include <Arduino.h>
 #include "timetable.h"
 
 const PROGMEM  uint_times dimStepTime[5001][8] = {
@@ -5009,8 +5008,11 @@ const PROGMEM  uint_times dimStepTime[5001][8] = {
 /*5000*/ {131, 0, 0, 0, 655351, 655351, 655351, 655351}};
 
 uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma) {
+  #ifdef PROGMEM 
+  return dimStepTime[value][gamma];
+  #else
   return pgm_read_dword(&(dimStepTime[value][gamma]));
+  #endif
 }
-
 
 #endif

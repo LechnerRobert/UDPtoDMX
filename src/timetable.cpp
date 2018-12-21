@@ -1,4 +1,4 @@
-#if USE_H801!=1
+#if (USE_H801==0) && (USE_DMXDUMMY==0)
 // save some unsigned ints
 
 

@@ -7,9 +7,11 @@ void DEBUG_BEGIN(uint8_t level){
   Serial.print(F(": ")) ;
 }
 
+#ifdef ARDUINO
 void DEBUG_PRINT(const __FlashStringHelper *ifsh) {
   Serial.print(ifsh);
 }
+#endif
 
 void DEBUG_PRINT(const int i) {
   Serial.print(i);

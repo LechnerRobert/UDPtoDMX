@@ -30,7 +30,7 @@ class virt_networkClass
     void loop();
     void Register_OnNetworkData(event_networkData callback);
     void beginPacket();    
-    #if (__FlashStringHelper != char)
+    #ifdef ARDUINO
       void print(const __FlashStringHelper *ifsh); 
     #endif
     void print(const int i); 

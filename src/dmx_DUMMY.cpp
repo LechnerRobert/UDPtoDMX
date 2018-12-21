@@ -22,6 +22,9 @@ void virt_dmxClass::write(uint_dmxChannel channel, uint_dmxValue value){
   if ((channel > 0) && (channel <= DMX_SIZE)) {
     dmxV[channel-1] = value;
   }
+  DEBUG_BEGIN(LOG_INFO);
+  DEBUG_PRINT(value);
+  DEBUG_END();
 };
 
 void  virt_dmxClass::init(uint_dmxChannel maxChannels) {

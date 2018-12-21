@@ -131,6 +131,7 @@ void loop() {
 #ifndef ARDUINO
 int main(int argc, char const *argv[])
 {
+  StartCounter();
   setup();
   while (true) {
     loop();

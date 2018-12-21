@@ -74,9 +74,8 @@ void virt_networkClass::init() {
 
 
 void virt_networkClass::loop() {
-int packetSize = udp.parsePacket(); 
-  if(packetSize)
-  {
+  int packetSize = udp.parsePacket(); 
+  if (packetSize) {
     // read the packet into packetBufffer
     udp.read(packetBuffer, maxPacketSize);
     if (packetSize > maxPacketSize) {
@@ -86,6 +85,9 @@ int packetSize = udp.parsePacket();
     
     onNetworkData(packetBuffer, packetSize);
   }
+  #ifdef USE_DHCP
+  Ethernet.maintain();
+  #endif
 }
 
 void virt_networkClass::Register_OnNetworkData(event_networkData callback) {

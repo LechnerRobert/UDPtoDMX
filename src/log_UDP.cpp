@@ -10,7 +10,7 @@ void DEBUG_BEGIN(uint8_t level){
   }
 }
 
-#if (__FlashStringHelper != char) 
+#ifdef ARDUINO
 void DEBUG_PRINT(const __FlashStringHelper *ifsh) {
   virt_network.print(ifsh);
 }
@@ -25,7 +25,6 @@ void DEBUG_PRINT(const char *c) {
 }
 
 void DEBUG_END(){
-  virt_network.print("\0", 1);
   virt_network.endPacket();
 }
 

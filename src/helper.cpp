@@ -25,14 +25,38 @@ uint_dmxValue c255(uint8_t proz, uint8_t gamma) {
   return result;
 };
 
+#ifndef ARDUINO
+#include <windows.h>
+#include <stdio.h>
+
+uint32_t PCFreq = 0;
+LARGE_INTEGER start_li;
+
+void StartCounter()
+{
+    LARGE_INTEGER li;
+    if(!QueryPerformanceFrequency(&li)) {
+      printf("QueryPerformanceFrequency failed!\n");
+    }
+    PCFreq = (li.QuadPart)/1000000.0;
+    QueryPerformanceCounter(&start_li);
+
+}
+
+double GetCounter()
+{
+}
 
 uint32_t millis(){
-  struct timeb stop;
-  ftime(&stop);
-  return (uint32_t) (1000 * stop.time + stop.millitm);
+  LARGE_INTEGER li;
+  QueryPerformanceCounter(&li);
+  return (uint32_t) ((li.QuadPart - start_li.QuadPart) / (PCFreq * 1000));
 }
-uint32_t cnt = 0;
 
 uint32_t micros(){
-  return cnt++;
+  LARGE_INTEGER li;
+  QueryPerformanceCounter(&li);
+  return (uint32_t) ((li.QuadPart - start_li.QuadPart) / (PCFreq));
 }
+
+#endif

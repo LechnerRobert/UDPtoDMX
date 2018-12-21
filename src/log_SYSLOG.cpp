@@ -11,9 +11,11 @@ void DEBUG_BEGIN(uint8_t level){
   }
 }
 
+#ifdef ARDUINO
 void DEBUG_PRINT(const __FlashStringHelper *ifsh) {
   virt_network.print(ifsh);
 }
+#endif
 
 void DEBUG_PRINT(const int i) {
   virt_network.print(i);

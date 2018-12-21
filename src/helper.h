@@ -5,10 +5,13 @@
 #include "types.h"
 
 #ifdef ARDUINO
+#include <Arduino.h>
 #else
 #include <sys\timeb.h>
 uint32_t millis();
 uint32_t micros();
+void StartCounter();
+
 #define PROGMEM
 #endif
 
