@@ -31,7 +31,8 @@ uint32_t millis(){
   ftime(&stop);
   return (uint32_t) (1000 * stop.time + stop.millitm);
 }
+uint32_t cnt = 0;
 
 uint32_t micros(){
-  return 10;
+  return cnt++;
 }

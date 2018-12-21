@@ -13,7 +13,12 @@
 //EthernetUDP udp;
 
 int startWinsock(void);
-  SOCKET s;
+  SOCKET socket_in;
+  SOCKET socket_out;
+  char buf[1024];
+  int buflen;
+  SOCKADDR_IN addr; //? can bei local, maybe ?
+  
 
 void virt_networkClass::init() {
     uint8_t mymac[6] = {  0x54, 0x55, 0x58, 0x10, 0x00, 0xF5 };
@@ -21,59 +26,107 @@ void virt_networkClass::init() {
     uint8_t mymask[4] = { 255, 255, 255, 0 };// subnet mask
 
   long rc;
-  SOCKADDR_IN addr;
+  char ipstr[17];
   
   DEBUG_PRINT(LOG_INFO, F("Init Network"));
-  rc=startWinsock();
-  if(rc!=0) 
-  {
-    printf("Fehler: startWinsock, fehler code: %d\n",rc);
+  rc = startWinsock();
+  if (rc == 0) { 
+    DEBUG_PRINT(LOG_INFO, F("Winsock gestartet!"));
+  } else {
+    DEBUG_BEGIN(LOG_ERR);
+    DEBUG_PRINT(F("Fehler: startWinsock, fehler code: "));
+    DEBUG_PRINT(rc);
+    DEBUG_END();
     return;
   }
-  else
-  {
-    printf("Winsock gestartet!\n");
-  }
   // UDP Socket erstellen
-  s=socket(AF_INET,SOCK_DGRAM,0);
-  if(s==INVALID_SOCKET)
-  {
-    printf("Fehler: Der Socket konnte nicht erstellt werden, fehler code: %d\n",WSAGetLastError());
+  socket_in = socket(AF_INET, SOCK_DGRAM, 0);
+  if(socket_in == INVALID_SOCKET) {
+    DEBUG_BEGIN(LOG_ERR);
+    DEBUG_PRINT(F("Fehler: Der Socket konnte nicht erstellt werden, fehler code: "));
+    DEBUG_PRINT(WSAGetLastError());
+    DEBUG_END();
     return ;
-  }
-  else
-  {
-    printf("UDP Socket erstellt!\n");
+  } else {
+    DEBUG_PRINT(LOG_INFO, F("UDP Socket erstellt!"));
   }
   
+  DEBUG_PRINT(LOG_INFO, F("Use STATIC IP"));
 // addr vorbereiten
-  addr.sin_family=AF_INET;
-  addr.sin_port=htons(1234);
-  addr.sin_addr.s_addr=inet_addr("127.0.0.1");
+  ZeroMemory((char*) &addr, sizeof(addr));
 
-  rc=connect(s,(SOCKADDR*)&addr,sizeof(SOCKADDR_IN));
   
-  //  DEBUG_PRINT(LOG_INFO, F("Use STATIC IP"));
+  addr.sin_family = AF_INET;
+  addr.sin_port = htons(udpPort);
+  sprintf(ipstr, "%d.%d.%d.%d", myip[0], myip[1], myip[2], myip[3]);
+
+  addr.sin_addr.s_addr = INADDR_ANY;  //inet_addr(ipstr);
+    
+  rc = bind(socket_in, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN));
+    DEBUG_BEGIN(LOG_ERR);
+    DEBUG_PRINT(F("UDP Bind Errorcode: "));
+    DEBUG_PRINT(WSAGetLastError());
+    DEBUG_PRINT(F(" "));
+    DEBUG_PRINT(rc);
+    DEBUG_END();
+  
   //  Ethernet.begin(mymac, myip, mygw, mymask);
   // udp.begin(udpPort);
-  isUP = true;
+  
+  uint32_t nTimeout = 1000; // 30 seconds
+  setsockopt(socket_in, SOL_SOCKET, SO_RCVTIMEO, (const char*)&nTimeout, sizeof(int));
+
+
+   u_long nonblocking_enabled = TRUE;
+
+   ioctlsocket(socket_in, FIONBIO, &nonblocking_enabled );
+
+  DEBUG_PRINT(LOG_INFO, ipstr);
   DEBUG_PRINT(LOG_INFO, F("UDP UP"));
 //delay(100);      
+
+// DEBUG UDP Socket erstellen
+  socket_out = socket(AF_INET, SOCK_DGRAM, 0);
+  if(socket_out == INVALID_SOCKET) {
+    DEBUG_BEGIN(LOG_ERR);
+    DEBUG_PRINT(F("Fehler: Der Socket konnte nicht erstellt werden, fehler code: "));
+    DEBUG_PRINT(WSAGetLastError());
+    DEBUG_END();
+    return ;
+  } else {
+    DEBUG_PRINT(LOG_INFO, F("UDP Socket erstellt!"));
+  }
+    
+  isUP = true;
+  DEBUG_PRINT(LOG_INFO, ipstr);
+//
+
 }
 
 
 void virt_networkClass::loop() {
-  int packetSize = 0; //udp.parsePacket(); 
-  if(packetSize)
-  {
-    // read the packet into packetBufffer
-//  udp.read(packetBuffer, maxPacketSize);
+  int packetSize = 0; 
+  long rc = recv(socket_in, packetBuffer, maxPacketSize, 0);
+  if(rc == SOCKET_ERROR) {
+      int le = WSAGetLastError();
+      if (le != WSAEWOULDBLOCK) {
+        DEBUG_BEGIN(LOG_ERR);
+        DEBUG_PRINT(F("UDP recv errorcode: "));
+        DEBUG_PRINT(le);
+        DEBUG_END();
+        return;
+      }  
+  } else {
+    packetSize = rc; 
+  }  
+  if (packetSize) { 
     if (packetSize > maxPacketSize) {
       packetSize = maxPacketSize;
     }
     DEBUG_PRINT(LOG_INFO, F("Network DATA"));
     
     onNetworkData(packetBuffer, packetSize);
+
   }
 }
 
@@ -99,22 +152,47 @@ void virt_networkClass::print(const __FlashStringHelper *ifsh) {
 
 void virt_networkClass::print(const int i){
   if (isUP) {
-//  udp.print(i);
+    char tmp[17];
+    sprintf(tmp, "%d", i);
+    print(tmp);
   }
 }
 
 void virt_networkClass::print(const char *c, int charlen){
   if (isUP) {
     if (charlen == 0) {
+      charlen = strlen(c);
 //    udp.print(c);
     } else {
 //    udp.write(c, charlen);
     }
+    memcpy(&buf[buflen], c, charlen);
+    buflen = buflen + charlen;
   }
 }
 void virt_networkClass::endPacket(){
   if (isUP) {
 //  udp.endPacket();
+    SOCKADDR_IN addr_out;
+    char ipstr[17];
+  
+    ZeroMemory((char*) &addr_out, sizeof(SOCKADDR_IN));
+    addr_out.sin_family = AF_INET;
+    addr_out.sin_port = htons(DEBUG_PORT);
+    sprintf(ipstr, "%d.%d.%d.%d", myip[0], myip[1], myip[2], DEBUG_IP);
+
+    addr_out.sin_addr.s_addr = inet_addr(ipstr);
+  
+
+    long rc = sendto(socket_out, buf, buflen, 0, (SOCKADDR*)&addr_out, sizeof(SOCKADDR_IN));
+    buflen = 0;
+    if(rc == SOCKET_ERROR) {
+      DEBUG_BEGIN(LOG_ERR);
+      DEBUG_PRINT(F("UDP send errorcode: "));
+      DEBUG_PRINT(WSAGetLastError());
+      DEBUG_END();
+      return;
+    }
   }
 }
 
@@ -128,46 +206,9 @@ int test()
 
   long rc;
   
-  char buf[256];
   char buf2[300];
   SOCKADDR_IN remoteAddr;
   int remoteAddrLen=sizeof(SOCKADDR_IN);
-
-
-
-  while(1)
-  {
-    printf("Text eingeben: ");
-    gets(buf);
-    //rc=sendto (s,buf,strlen(buf),0,(SOCKADDR*)&addr,sizeof(SOCKADDR_IN));
-    rc=send(s,buf,strlen(buf),0);
-    if(rc==SOCKET_ERROR)
-    {
-      //printf("Fehler: sendto, fehler code: %d\n",WSAGetLastError());
-      printf("Fehler: send, fehler code: %d\n",WSAGetLastError());
-      return 1;
-    }
-    else
-    {
-      printf("%d Bytes gesendet!\n", rc);
-    }    //rc=recvfrom(s,buf,256,0,(SOCKADDR*)&remoteAddr,&remoteAddrLen);
-
-    rc=recv(s,buf,256,0);
-
-    if(rc==SOCKET_ERROR)
-    {
-      //printf("Fehler: recvfrom, fehler code: %d\n",WSAGetLastError());
-      printf("Fehler: recv, fehler code: %d\n",WSAGetLastError());
-      return 1;
-    }
-    else
-    {
-      printf("%d Bytes empfangen!\n", rc);
-      buf[rc]='\0';
-      printf("Empfangene Daten: %s\n",buf);
-    }
-  }
-  return 0;
 
 }
 

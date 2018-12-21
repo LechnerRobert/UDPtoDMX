@@ -13,7 +13,7 @@
 
 typedef uint16_t  uint_dmxChannel;
 #if (USE_H801==1) || (USE_DMXDUMMY==1)
-#define QUEUESIZE 5
+#define QUEUESIZE DMX_SIZE
 typedef uint16_t  uint_dmxValue;
 typedef uint32_t uint_times;
 #define maxValue 5000

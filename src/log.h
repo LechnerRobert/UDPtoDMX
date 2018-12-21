@@ -11,12 +11,13 @@
 #define LOG_DEBUG 7 /* debug-level messages */
 
 
-#if (DEBUG_SERIAL0 == 0) && (DEBUG_UDP == 0) && (DEBUG_SYSLOG == 0)
-  #define DEBUG_INIT
+#if (DEBUG_SERIAL0 == 0) && (DEBUG_UDP == 0) && (DEBUG_SYSLOG == 0) && (DEBUG_CONSOLE == 0)
+  #define DEBUG_INIT()
   #define DEBUG_BEGIN(level)
-  #define DEBUG_PRINT(str)
+  //#define DEBUG_PRINT(str)
   #define DEBUG_END()
-  #define DEBUG_PRINT(level, str)
+  #define DEBUG_PRINT(...)
+  #define DEBUG_NIL
 #else
 
 #include <inttypes.h>
@@ -26,7 +27,9 @@
 void DEBUG_INIT();
 void DEBUG_BEGIN(uint8_t level);
 void DEBUG_PRINT(const char *c); 
+#if (__FlashStringHelper != char)
 void DEBUG_PRINT(const __FlashStringHelper *ifsh); 
+#endif
 void DEBUG_PRINT(const int i); 
 void DEBUG_END();
 void DEBUG_PRINT(uint8_t level, const __FlashStringHelper *ifsh); 

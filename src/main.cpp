@@ -27,7 +27,6 @@ void networkData(char *data, int datalen){
    uint8_t onoffSpeed = 0;
    uint8_t gamma = 0;
    bool isOnOff = false;
-   DEBUG_PRINT(LOG_INFO, F("Network DATA2"));
 
    if ((datalen > 3) && 
        (data[0] == 'D')  &&
@@ -57,24 +56,6 @@ void networkData(char *data, int datalen){
       onoffSpeed = updSp;
      }
      
-     /*DEBUG_PRINT(LOG_INFO, F("Channel: "));
-     DEBUG_PRINTln(LOG_INFO, startChannel);
-     DEBUG_PRINT(LOG_INFO, F("newValue: "));
-     DEBUG_PRINT(LOG_INFO, newValue);
-     DEBUG_PRINT(LOG_INFO, F(" = "));
-     DEBUG_PRINTln(LOG_INFO, F("?"));
-    // DEBUG_PRINTln(LOG_INFO, c255(newValue, gamma));        
-     DEBUG_PRINT(LOG_INFO, F("Speed: "));
-     DEBUG_PRINTln(LOG_INFO, updSp);
-     DEBUG_PRINT(LOG_INFO, F("Gamma: "));
-     DEBUG_PRINTln(LOG_INFO, gamma);
-     DEBUG_PRINT(LOG_INFO, F("onoff Speed: "));
-     DEBUG_PRINTln(LOG_INFO, onoffSpeed);
-     DEBUG_PRINT(LOG_INFO, F("old Value: "));
-     DEBUG_PRINTln(LOG_INFO, dmxHW.read(startChannel));
-     DEBUG_PRINT(LOG_INFO, "Typ: ");
-     DEBUG_PRINT(LOG_INFO, packetBuffer[0 + 3]);
-     DEBUG_PRINTln(LOG_INFO, "");*/
      if  (data[0 + 3] == 'R') {
        isOnOff = queue.add(startChannel, updSp, newValue % 1000, gamma, true);
        newValue = newValue / 1000;
@@ -147,6 +128,7 @@ void loop() {
 
 }
 
+#ifndef ARDUINO
 int main(int argc, char const *argv[])
 {
   setup();
@@ -155,3 +137,4 @@ int main(int argc, char const *argv[])
   }
   return 0;
 }
+#endif
