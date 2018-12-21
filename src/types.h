@@ -3,6 +3,13 @@
 
 #include <stdint.h>
 
+#if (defined(ESP8266) || defined(__AVR__))
+#define ADRUINO
+#include <WString.h>
+#else
+  #define __FlashStringHelper char
+  #define F(string_literal) (string_literal)
+#endif
 
 typedef uint16_t  uint_dmxChannel;
 #if (USE_H801==1) || (USE_DMXDUMMY==1)

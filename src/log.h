@@ -20,7 +20,7 @@
 #else
 
 #include <inttypes.h>
-#include <WString_.h>
+#include <types.h>
 
 
 void DEBUG_INIT();

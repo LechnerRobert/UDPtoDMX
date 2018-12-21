@@ -1,7 +1,7 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <WString_.h>
+#include <types.h>
 #include <inttypes.h>
 
 //SPI

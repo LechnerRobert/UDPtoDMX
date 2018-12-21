@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "types.h"
 
-#if (defined(ESP8266) || defined(__AVR__))
+#ifdef ARDUINO
 #else
 #include <sys\timeb.h>
 uint32_t millis();
