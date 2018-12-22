@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #if (defined(ESP8266) || defined(__AVR__))
-#define ADRUINO 18000
+#define ADRUINO 10805
 #include <WString.h>
 #else
   #define __FlashStringHelper char

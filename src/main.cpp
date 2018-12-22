@@ -7,9 +7,11 @@
 #include "simulator.h"
 #include "otaupdate.h"
 
-uint32_t extractNumber(const char *data, int *start) {
+uint32_t extractNumber(const char *data, int *start, bool *eof) {
   uint32_t result = 0;
+  *eof = true;
   while ((*start < maxPacketSize) && (data[*start] >= '0') && (data[*start] <= '9')) {
+    *eof = false;
     result = result * 10;
     result = result + uint8_t(data[*start] - '0');
     (*start)++;
@@ -44,14 +46,19 @@ void networkData(char *data, int datalen){
        DEBUG_END();
  
      p1 = p1 + 4;
-     startChannel = extractNumber(data, &p1);
-     newValue = extractNumber(data, &p1);
-     updSp = extractNumber(data, &p1);
+     bool eof = false;
+     startChannel = extractNumber(data, &p1, &eof);
+     newValue = extractNumber(data, &p1, &eof);
+     updSp = extractNumber(data, &p1, &eof);
      if (updSp == 0) {
        updSp = 2;  
      }
-     gamma = extractNumber(data, &p1);
-     onoffSpeed = extractNumber(data, &p1);
+     gamma = extractNumber(data, &p1, &eof);
+     if (eof) {
+       gamma = 2;
+     };
+     
+     onoffSpeed = extractNumber(data, &p1, &eof);
      if (onoffSpeed == 0) {
       onoffSpeed = updSp;
      }
