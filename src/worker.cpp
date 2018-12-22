@@ -97,6 +97,9 @@ void workerClass::step() {
           } else {
             waitTime = _dimStepTime(newValue - 1, queueItem->gamma) * 2;
           }
+          #if (USE_H801==1) || (USE_DMXDUMMY==1)
+          waitTime = waitTime * 2; //??          
+          #endif
           /*DEBUG_PRINTln("*");   
           DEBUG_PRINTln(waitTime);   
           DEBUG_PRINTln(queueItem->dimtime );   

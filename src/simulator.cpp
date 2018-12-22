@@ -6,7 +6,7 @@ void  simulatorClass::init() {
 };
 
 void  simulatorClass::loop() {
-  if (timeDiff(lastUpdate, millis()) > 40) {
+  if (timeDiff(lastUpdate, millis()) > 10) {
     lastUpdate = millis();
     step();
   }

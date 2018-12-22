@@ -152,6 +152,7 @@ void virt_networkClass::print(const char *c, int charlen){
 
 void virt_networkClass::endPacket(){
   if (isUP) {
+    udp.write(uint8_t(0));
     udp.endPacket();
   }
 }

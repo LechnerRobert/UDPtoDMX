@@ -183,8 +183,8 @@ void virt_networkClass::endPacket(){
 
     addr_out.sin_addr.s_addr = inet_addr(ipstr);
   
-
-    long rc = sendto(socket_out, buf, buflen, 0, (SOCKADDR*)&addr_out, sizeof(SOCKADDR_IN));
+    buf[buflen] = 0;
+    long rc = sendto(socket_out, buf, buflen + 1, 0, (SOCKADDR*)&addr_out, sizeof(SOCKADDR_IN));
     buflen = 0;
     if(rc == SOCKET_ERROR) {
       DEBUG_BEGIN(LOG_ERR);
