@@ -5007,17 +5007,23 @@ const PROGMEM  uint16_t dimStepTime[5001][3] = {
 /*5000*/ {0, 0, 0},
 /*5001*/ {0, 0, 0}};
 
-uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma) {
+uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma, bool fake1) {
+  uint16_t result;
   if (gamma == 0) {
-    return 131;
+    result = 131;
   } else  {
     #ifdef ARDUINO 
-    uint16_t tmp = pgm_read_word(&(dimStepTime[value][gamma-1]));
-    return tmp;
+    result = pgm_read_word(&(dimStepTime[value][gamma-1]));
     #else
-    return dimStepTime[value][gamma - 1];
+    result = dimStepTime[value][gamma - 1];
     #endif
   }
+  if ((value == 0) && (fake1) ){
+    return 1;
+  } else if ((value == 1) && (fake1)) {
+    result = result + _dimStepTime(value, gamma, false);
+  }
+  return result;
 }
  
 

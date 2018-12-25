@@ -4,7 +4,7 @@
 
 #include "timetable.h"
 
-const PROGMEM  uint_times dimStepTime[256][8] = {
+const PROGMEM  uint16_t dimStepTime[256][8] = {
 
 /*1*/ {258, 512, 4105, 7686, 258, 512, 4105, 10336},
 /*2*/ {257, 502, 1700, 3000, 515, 1014, 5805, 13022},
@@ -265,9 +265,9 @@ const PROGMEM  uint_times dimStepTime[256][8] = {
 
 uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma, bool fake1) {
   #ifdef ARDUINO 
-  uint_times result = pgm_read_word(&(dimStepTime[value][gamma]));
+  uint16_t result = pgm_read_word(&(dimStepTime[value][gamma]));
   #else
-  uint_times result = dimStepTime[value][gamma];
+  uint16_t result = dimStepTime[value][gamma];
   #endif
   if ((value == 0) && (fake1) ){
     return 1;

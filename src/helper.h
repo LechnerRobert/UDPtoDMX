@@ -10,6 +10,8 @@
 #include <sys\timeb.h>
 uint32_t millis();
 uint32_t micros();
+#define max(a,b) ((a)>(b)?(a):(b))
+
 void StartCounter();
 
 #define PROGMEM
