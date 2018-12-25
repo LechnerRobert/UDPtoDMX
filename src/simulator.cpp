@@ -33,9 +33,9 @@ void simulatorClass::sendAction(uint_dmxChannel channel, const char* action){
   char buffer[4] = "DML"; 
   virt_network.beginPacket();
   virt_network.print(buffer, 5);
-  buffer[0] = channel / 0xFF;
-  virt_network.print(buffer, 1);
   buffer[0] = channel % 0xFF;
+  virt_network.print(buffer, 1);
+  buffer[0] = channel / 0xFF;
   virt_network.print(buffer, 1);
   virt_network.print(action);
   virt_network.endPacket();

@@ -20,7 +20,7 @@ class virt_networkClass
     char packetBuffer[maxPacketSize]; //buffer to hold incoming packet, 
 
     //STATIC IP, ignored if USE_DHCP is defined
-    uint8_t myip[4] = { 192, 168, 123, 176 };
+    uint8_t myip[4] = { 192, 168, ST_IP_3, ST_IP_4 };
     
     event_networkData onNetworkData;
     

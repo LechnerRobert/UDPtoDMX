@@ -6,8 +6,8 @@
 
 const PROGMEM  uint_times dimStepTime[256][8] = {
 
-/*1*/ {258, 512, 4105, 1, 258, 512, 4105, 10336},
-/*2*/ {257, 502, 1700, 10686, 515, 1014, 5805, 13022},
+/*1*/ {258, 512, 4105, 7686, 258, 512, 4105, 10336},
+/*2*/ {257, 502, 1700, 3000, 515, 1014, 5805, 13022},
 /*3*/ {257, 495, 1305, 1885, 772, 1509, 7110, 14907},
 /*4*/ {257, 488, 1099, 1500, 1029, 1997, 8209, 16407},
 /*5*/ {257, 481, 969, 1266, 1286, 2478, 9178, 17673},
@@ -263,12 +263,18 @@ const PROGMEM  uint_times dimStepTime[256][8] = {
 /*255*/ {257, 149, 101, 42, 65535, 65535, 65535, 65535},
 /*255*/ {257, 149, 101, 42, 65535, 65535, 65535, 65535}};
 
-uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma) {
-  #ifdef PROGMEM 
-  return dimStepTime[value][gamma];
+uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma, bool fake1) {
+  #ifdef ARDUINO 
+  uint_times result = pgm_read_word(&(dimStepTime[value][gamma]));
   #else
-  return pgm_read_word(&(dimStepTime[value][gamma]));
+  uint_times result = dimStepTime[value][gamma];
   #endif
+  if ((value == 0) && (fake1) ){
+    return 1;
+  } else if ((value == 1) && (fake1)) {
+    result = result + _dimStepTime(value, gamma, false);
+  }
+  return result;
 }
 
 #endif

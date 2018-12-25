@@ -27,8 +27,8 @@ EthernetUDP udp;
 
 
 void virt_networkClass::init() {
-    uint8_t mymac[6] = {  0x54, 0x55, 0x58, 0x10, 0x00, 0xF5 };
-    uint8_t mygw[4] = { 192, 168, 123, 254 };// ip of gateway
+    uint8_t mymac[6] = {  0x54, 0x55, 0x58, 0x10, 0x23, ST_IP_4 };
+    uint8_t mygw[4] = { 192, 168, ST_IP_3, 254 };// ip of gateway 
     uint8_t mymask[4] = { 255, 255, 255, 0 };// subnet mask
 
   DEBUG_PRINT(LOG_INFO, F("Init Network"));

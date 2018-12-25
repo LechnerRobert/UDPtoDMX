@@ -6,6 +6,6 @@
 #include "types.h"
 #include "helper.h"
 
-uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma);
+uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma, bool fake1);
 
 #endif

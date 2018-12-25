@@ -58,7 +58,7 @@ void workerClass::step() {
         
         divTime = RefreshBaseTime * chInc / chStep;
         
-        if (queueItem->dimtime == 0xFFFF) {
+        if ((queueItem->dimtime == 0xFFFF) && (newValue > 0)) {
           newValue = newValue - 1; 
           queueItem->dimtime = 0;
         }
@@ -68,21 +68,21 @@ void workerClass::step() {
         /*DEBUG_PRINTln("T");
         DEBUG_PRINTln(millis());
         DEBUG_PRINTln(queueItem->dimtime);
-        DEBUG_PRINTln(_dimStepTime(newValue, queueItem->gamma));
+        DEBUG_PRINTln(_dimStepTime(newValue, queueItem->gamma, true));
         DEBUG_PRINTln("");*/
         }
         
         if (dimTo > oldValue) {
-          while (queueItem->dimtime >= _dimStepTime(newValue, queueItem->gamma) ) {
-            queueItem->dimtime = queueItem->dimtime - _dimStepTime(newValue, queueItem->gamma);
+          while (queueItem->dimtime >= _dimStepTime(newValue, queueItem->gamma, true) ) {
+            queueItem->dimtime = queueItem->dimtime - _dimStepTime(newValue, queueItem->gamma, true);
             newValue = newValue + 1;
             if (newValue == dimTo) {
               break;
             }
           }
         } else if (dimTo < oldValue) {
-          while (queueItem->dimtime >= _dimStepTime(newValue, queueItem->gamma)) {
-            queueItem->dimtime = queueItem->dimtime - _dimStepTime(newValue, queueItem->gamma);
+          while (queueItem->dimtime >= _dimStepTime(newValue, queueItem->gamma, true)) {
+            queueItem->dimtime = queueItem->dimtime - _dimStepTime(newValue, queueItem->gamma, true);
             newValue = newValue - 1;
             if (newValue == dimTo) {
               break;
@@ -93,18 +93,20 @@ void workerClass::step() {
         
           uint16_t waitTime;
           if (queueItem->waitUp) {
-            waitTime = _dimStepTime(newValue, queueItem->gamma) * 2;
+            waitTime = _dimStepTime(newValue, queueItem->gamma, false) * 2;
           } else {
-            waitTime = _dimStepTime(newValue - 1, queueItem->gamma) * 2;
+            waitTime = _dimStepTime(max(newValue - 1, 0), queueItem->gamma, false) * 2;
           }
           #if (USE_H801==1) || (USE_DMXDUMMY==1)
           waitTime = waitTime * 2; //??          
           #endif
-          /*DEBUG_PRINTln("*");   
-          DEBUG_PRINTln(waitTime);   
-          DEBUG_PRINTln(queueItem->dimtime );   
-          DEBUG_PRINTln("*");   
+          /*
+          DEBUG_BEGIN(LOG_INFO);
+          DEBUG_PRINT(F("WAIT "));
+          DEBUG_PRINT(waitTime);
+          DEBUG_END();
           */
+          
           if (queueItem->dimtime > waitTime) {
             queueItem->wait = queueItem->wait - 2;
           }
