@@ -75,7 +75,9 @@ void workerClass::step() {
         if (dimTo > oldValue) {
           while (queueItem->dimtime >= _dimStepTime(newValue, queueItem->gamma, true) ) {
             queueItem->dimtime = queueItem->dimtime - _dimStepTime(newValue, queueItem->gamma, true);
-            newValue = newValue + 1;
+            if (newValue < maxValue) {
+              newValue = newValue + 1;
+            }
             if (newValue == dimTo) {
               break;
             }
@@ -83,7 +85,9 @@ void workerClass::step() {
         } else if (dimTo < oldValue) {
           while (queueItem->dimtime >= _dimStepTime(newValue, queueItem->gamma, true)) {
             queueItem->dimtime = queueItem->dimtime - _dimStepTime(newValue, queueItem->gamma, true);
-            newValue = newValue - 1;
+            if (newValue > 0) {
+              newValue = newValue - 1;
+            }
             if (newValue == dimTo) {
               break;
             }

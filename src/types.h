@@ -17,6 +17,7 @@ typedef uint16_t  uint_dmxChannel;
 typedef uint16_t  uint_dmxValue;
 typedef uint32_t uint_times;
 #define maxValue 5000
+#define simulatorUpdateMillis 10
 
 #define RefreshTime 10000
 #define RefreshBaseTime 11090    /*(1109 * RefreshTime / 10000)  * 10  */  
@@ -26,6 +27,7 @@ typedef uint32_t uint_times;
 typedef uint8_t  uint_dmxValue;
 typedef uint16_t uint_times;
 #define maxValue 255
+#define simulatorUpdateMillis 50
 #define RefreshTime 10000
 #define RefreshBaseTime 1109    /*(1109 * RefreshTime / 10000)*/
 #endif

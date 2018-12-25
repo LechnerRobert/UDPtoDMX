@@ -60,6 +60,8 @@ bool dmxqueueClass::add(uint_dmxChannel channel, uint8_t dimSpeed, uint_dmxValue
       DEBUG_PRINT(intQueue[i].aktiv);
       DEBUG_PRINT(F(" dimFrom: "));
       DEBUG_PRINT(intQueue[i].dimTo);
+      DEBUG_PRINT(F(" speed: "));
+      DEBUG_PRINT(dimSpeed);
       DEBUG_PRINT(F(" dimTo: "));
       DEBUG_PRINT(dimTo);
       DEBUG_PRINT(F(" = "));

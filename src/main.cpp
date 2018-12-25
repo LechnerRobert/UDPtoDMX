@@ -112,7 +112,6 @@ void QueueStop(uint_dmxChannel channel) {
 
 void setup() {
   DEBUG_INIT();
-  
   // put your setup code here, to run once:
   virt_network.Register_OnNetworkData(&networkData);
   virt_network.init();
@@ -132,7 +131,7 @@ void loop() {
   virt_dmx.loop();
   worker.loop();
   simulator.loop();
-
+  
 }
 
 #ifndef ARDUINO

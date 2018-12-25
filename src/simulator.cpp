@@ -1,3 +1,5 @@
+#if (USE_SIMULATOR == 1) 
+
 #include "simulator.h"
 
 void  simulatorClass::init() {
@@ -6,7 +8,7 @@ void  simulatorClass::init() {
 };
 
 void  simulatorClass::loop() {
-  if (timeDiff(lastUpdate, millis()) > 10) {
+  if (timeDiff(lastUpdate, millis()) > simulatorUpdateMillis) {
     lastUpdate = millis();
     step();
   }
@@ -43,3 +45,6 @@ void simulatorClass::sendAction(uint_dmxChannel channel, const char* action){
 
 
 simulatorClass simulator;
+
+#endif
+  
