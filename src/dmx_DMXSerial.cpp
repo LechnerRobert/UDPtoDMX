@@ -14,7 +14,7 @@ void virt_dmxClass::write(uint_dmxChannel channel, uint_dmxValue value){
 void  virt_dmxClass::init(uint_dmxChannel maxChannels) {
   DEBUG_PRINT(LOG_INFO, F("Init DMXSerial"));
   DMXSerial.init(DMXController);
-//DMXSerial.maxChannel(maxChannels);
+  DMXSerial.maxChannel(maxChannels);
 };
 
 void  virt_dmxClass::loop() {

@@ -20,12 +20,14 @@ uint32_t extractNumber(const char *data, int *start, bool *eof) {
   return result;
 }
 
+#define proz10 20
+
 uint8_t plus10(uint16_t value) {
-  return max(0, (value-10)*100/90);
+  return max(0, (value - proz10) * 100 / (100 - proz10));
 }
 
 uint8_t minus10(uint16_t value) {
-  return min(100, value*100/90);
+  return min(100, value * 100 / (100 - proz10));
 }
 
 void networkData(char *data, int datalen){
@@ -83,13 +85,12 @@ void networkData(char *data, int datalen){
        isOnOff = queue.add(startChannel, updSp, newValue, gamma, true);
        queue.update(startChannel, onoffSpeed, isOnOff);
      } else if  (data[0 + 3] == 'W') {
-       
        isOnOff = queue.add(startChannel, updSp, plus10(newValue), 3, true);
-       isOnOff = queue.add(startChannel + 1, updSp, minus10(newValue), 2, true) | isOnOff;
+       isOnOff = queue.add(startChannel + 1, updSp, minus10(newValue), 3 /*or 2*/, true) | isOnOff;
        queue.update(startChannel, onoffSpeed, isOnOff);
        queue.update(startChannel + 1, onoffSpeed, isOnOff);
      } else if  (data[0 + 3] == 'V') {
-       isOnOff = queue.add(startChannel, updSp, minus10(newValue), 2, true);
+       isOnOff = queue.add(startChannel, updSp, minus10(newValue), 3 /*or 2*/, true);
        isOnOff = queue.add(startChannel + 1, updSp, plus10(newValue), 3, true) | isOnOff;       
        queue.update(startChannel, onoffSpeed, isOnOff);
        queue.update(startChannel + 1, onoffSpeed, isOnOff);

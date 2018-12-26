@@ -3,6 +3,7 @@
 #include "log.h"
 
 void DEBUG_BEGIN(uint8_t level){
+  while(!Serial); /*   For Lenoardo: wait for serial monitor. */
   Serial.print(level);
   Serial.print(F(": ")) ;
 }
