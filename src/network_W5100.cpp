@@ -43,10 +43,12 @@ void virt_networkClass::init() {
     mymac[3] = readUUIDRegister(0xFD);
     mymac[4] = readUUIDRegister(0xFE);
     mymac[5] = readUUIDRegister(0xFF);
-  //char tmpBuf[17];
- // sprintf(tmpBuf, "%02X:%02X:%02X:%02X:%02X:%02X", mymac[0], mymac[1], mymac[2], mymac[3], mymac[4], mymac[5]);
- // DEBUG_PRINT(LOG_INFO, F("My MAC: "));
- // DEBUG_PRINTln(LOG_INFO, tmpBuf);
+    char tmpBuf[17];
+    sprintf(tmpBuf, "%02X:%02X:%02X:%02X:%02X:%02X", mymac[0], mymac[1], mymac[2], mymac[3], mymac[4], mymac[5]);
+    DEBUG_BEGIN(LOG_INFO);
+    DEBUG_PRINT(F("My MAC: "));
+    DEBUG_PRINT(tmpBuf);
+    DEBUG_END();
   #endif
 
   pinMode(SS_SD_CARD, OUTPUT);
@@ -61,7 +63,16 @@ void virt_networkClass::init() {
       // no point in carrying on, so do nothing forevermore:
       for (;;)
         ;
-    }    
+    } else {
+      DEBUG_BEGIN(LOG_INFO);
+      DEBUG_PRINT(F("My IP: "));
+      IPAddress localIP = Ethernet.localIP();
+      char tmpBuf[17];
+      sprintf(tmpBuf, "%d.%d.%d.%d", localIP[0], localIP[1], localIP[2], localIP[3]);
+      DEBUG_PRINT(tmpBuf);
+      DEBUG_END();
+
+    }
   #else
     DEBUG_PRINT(LOG_INFO, F("Use STATIC IP"));
     Ethernet.begin(mymac, myip, mygw, mymask);

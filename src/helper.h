@@ -10,6 +10,7 @@
 #include <sys\timeb.h>
 uint32_t millis();
 uint32_t micros();
+#define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
 
 void StartCounter();
