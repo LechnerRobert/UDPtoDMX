@@ -24,7 +24,11 @@ uint32_t extractNumber(const char *data, int *start, bool *eof) {
 #define proz10 20
 
 uint8_t plus10(uint16_t value) {
-  return max(0, (value - proz10) * 100 / (100 - proz10));
+  if (value >= proz10) {
+    return (value - proz10) * 100 / (100 - proz10);
+  } else {
+    return 0;
+  }
 }
 
 uint8_t minus10(uint16_t value) {
@@ -135,7 +139,6 @@ void setup() {
   #if DO_STRESSTEST==1
   testQueue();
   #endif
-
 }
 
 void loop() {
