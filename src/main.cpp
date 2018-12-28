@@ -6,6 +6,7 @@
 #include "worker.h"
 #include "simulator.h"
 #include "otaupdate.h"
+#include "stresstest.h"
 
 uint32_t extractNumber(const char *data, int *start, bool *eof) {
   uint32_t result = 0;
@@ -131,6 +132,9 @@ void setup() {
   virt_dmx.init(16);
   worker.init();
   simulator.init();
+  #if DO_STRESSTEST==1
+  testQueue();
+  #endif
 
 }
 

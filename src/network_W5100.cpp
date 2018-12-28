@@ -58,21 +58,25 @@ void virt_networkClass::init() {
   
  #if USE_DHCP == 1
     DEBUG_PRINT(LOG_INFO, F("Use DHCP"));
-    if (Ethernet.begin(mymac) == 0) {
-      DEBUG_PRINT(LOG_ERR, F("IP: Failed to configure Ethernet using DHCP"));
-      // no point in carrying on, so do nothing forevermore:
-      for (;;)
-        ;
+    if (myip[3]==255) {
+      if (Ethernet.begin(mymac) == 0) {
+        DEBUG_PRINT(LOG_ERR, F("IP: Failed to configure Ethernet using DHCP"));
+        // no point in carrying on, so do nothing forevermore:
+        for (;;)
+          ;
+      } else {
+        DEBUG_BEGIN(LOG_INFO);
+        DEBUG_PRINT(F("My IP: "));
+        IPAddress localIP = Ethernet.localIP();
+        char tmpBuf[17];
+        sprintf(tmpBuf, "%d.%d.%d.%d", localIP[0], localIP[1], localIP[2], localIP[3]);
+        DEBUG_PRINT(tmpBuf);
+        DEBUG_END();
+      }
     } else {
-      DEBUG_BEGIN(LOG_INFO);
-      DEBUG_PRINT(F("My IP: "));
-      IPAddress localIP = Ethernet.localIP();
-      char tmpBuf[17];
-      sprintf(tmpBuf, "%d.%d.%d.%d", localIP[0], localIP[1], localIP[2], localIP[3]);
-      DEBUG_PRINT(tmpBuf);
-      DEBUG_END();
-
-    }
+      DEBUG_PRINT(LOG_INFO, F("Use STATIC IP"));
+      Ethernet.begin(mymac, myip, mygw, mymask);
+    }    
   #else
     DEBUG_PRINT(LOG_INFO, F("Use STATIC IP"));
     Ethernet.begin(mymac, myip, mygw, mymask);

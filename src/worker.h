@@ -13,8 +13,8 @@ class workerClass
 {  
   private:
     uint32_t lastTime;
-    void step();
   public:
+    void step(); 
     void init();  
     void loop();
 };
