@@ -1,7 +1,10 @@
 #include "helper.h"
 
 uint_dmxValue c255(uint8_t proz, uint8_t gamma) {
-  
+  return _prozToDim(proz, gamma);
+}
+
+/*  
   uint32_t p2 = proz;
   uint_dmxValue result;
   if (gamma == 3) {
@@ -19,12 +22,12 @@ uint_dmxValue c255(uint8_t proz, uint8_t gamma) {
   } else {
     result = p2 * maxValue / 100;
   }
-  if ((proz > 0) && (result == 0)) {
-    result = 1;
+  if ((proz > 0) && (result < DIMMER_START_LEVEL)) {
+    result = DIMMER_START_LEVEL;
   }
   return result;
 };
-
+*/
 #ifndef ARDUINO
 #include <windows.h>
 #include <stdio.h>

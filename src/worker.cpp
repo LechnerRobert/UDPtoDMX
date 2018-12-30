@@ -58,11 +58,11 @@ void workerClass::step() {
         
         divTime = RefreshBaseTime * chInc / chStep;
         
-        if ((queueItem->dimtime == 0xFFFF) && (newValue > 0)) {
-          newValue = newValue - 1; 
+        if ((queueItem->dimtime == 0xFFFF) && (newValue > 0) && (dimTo < oldValue)) {
+        //newValue = newValue - 1; 
           queueItem->dimtime = 0;
-        }
-        
+        } 
+
         queueItem->dimtime = queueItem->dimtime + divTime;
         if (dimTo < 10) {
         /*DEBUG_PRINTln("T");
@@ -95,11 +95,11 @@ void workerClass::step() {
         
         } else if (queueItem->wait > 0) {
         
-          uint16_t waitTime;
+          uint16_t waitTime = 0;
           if (queueItem->waitUp) {
-            waitTime = _dimStepTime(newValue, queueItem->gamma, false) * 2;
-          } else {
-            waitTime = _dimStepTime(max(newValue - 1, 0), queueItem->gamma, false) * 2;
+            waitTime = _dimStepTime(newValue, queueItem->gamma, false) / 10 * 12;
+          } else if (newValue > 0) {
+            waitTime = _dimStepTime(newValue - 1, queueItem->gamma, false) / 10 * 12;
           }
           #if (USE_H801==1) || (USE_DMXDUMMY==1)
           waitTime = waitTime * 2; //??          

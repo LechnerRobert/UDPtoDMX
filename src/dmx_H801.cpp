@@ -62,7 +62,7 @@ void  virt_dmxClass::init(uint_dmxChannel maxChannels) {
 };
 
 void  virt_dmxClass::loop() {
-  if (timeDiff(lastUpdate, millis()) > 20) {
+  if (timeDiff(lastUpdate, millis()) > 5) {
     lastUpdate = millis();
 
     pwm_set_duty(dmxV[2], 0);  //BLUE

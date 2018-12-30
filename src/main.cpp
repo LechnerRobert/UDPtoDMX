@@ -90,13 +90,13 @@ void networkData(char *data, int datalen){
        isOnOff = queue.add(startChannel, updSp, newValue, gamma, true);
        queue.update(startChannel, onoffSpeed, isOnOff);
      } else if  (data[0 + 3] == 'W') {
-       isOnOff = queue.add(startChannel, updSp, plus10(newValue), 3, true);
-       isOnOff = queue.add(startChannel + 1, updSp, minus10(newValue), 3 /*or 2*/, true) | isOnOff;
+       isOnOff = queue.add(startChannel, updSp, plus10(newValue), gamma, true);                                  /*CW*/
+       isOnOff = queue.add(startChannel + 1, updSp, minus10(newValue), gamma /*or gamma - 1*/, true) | isOnOff;  /*WW*/
        queue.update(startChannel, onoffSpeed, isOnOff);
        queue.update(startChannel + 1, onoffSpeed, isOnOff);
      } else if  (data[0 + 3] == 'V') {
-       isOnOff = queue.add(startChannel, updSp, minus10(newValue), 3 /*or 2*/, true);
-       isOnOff = queue.add(startChannel + 1, updSp, plus10(newValue), 3, true) | isOnOff;       
+       isOnOff = queue.add(startChannel, updSp, minus10(newValue), gamma /*or gamma - 1*/, true);
+       isOnOff = queue.add(startChannel + 1, updSp, plus10(newValue), gamma, true) | isOnOff;       
        queue.update(startChannel, onoffSpeed, isOnOff);
        queue.update(startChannel + 1, onoffSpeed, isOnOff);
      } else if  (data[0 + 3] == 'S') {
@@ -139,6 +139,9 @@ void setup() {
   #if DO_STRESSTEST==1
   testQueue();
   #endif
+
+
+
 }
 
 void loop() {

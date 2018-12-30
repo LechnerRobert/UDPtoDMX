@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "types.h"
+#include "timetable.h"
 
 #ifdef ARDUINO
 #include <Arduino.h>
