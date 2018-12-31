@@ -97,9 +97,9 @@ void workerClass::step() {
         
           uint16_t waitTime = 0;
           if (queueItem->waitUp) {
-            waitTime = _dimStepTime(newValue, queueItem->gamma, false) / 10 * 12;
+            waitTime = _dimStepTime(newValue + 1, queueItem->gamma, true);
           } else if (newValue > 0) {
-            waitTime = _dimStepTime(newValue - 1, queueItem->gamma, false) / 10 * 12;
+            waitTime = _dimStepTime(newValue - 1, queueItem->gamma, true);
           }
           #if (USE_H801==1) || (USE_DMXDUMMY==1)
           waitTime = waitTime * 2; //??          

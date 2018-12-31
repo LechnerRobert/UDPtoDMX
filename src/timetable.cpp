@@ -378,7 +378,7 @@ uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma, bool fake1) {
   } else if ((value == DIMMER_START_LEVEL) && (fake1)) {
     while (value > 0) {
       value = value - 1;
-     result = result + _dimStepTime(value, gamma, false);
+      result = result + _dimStepTime(value, gamma, false);
     }
   }
   return result;
