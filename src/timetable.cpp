@@ -386,14 +386,9 @@ uint_times _dimStepTime(uint_dmxChannel value, uint8_t gamma, bool fake1) {
 
 uint_dmxValue _prozToDim(uint8_t value, uint8_t gamma) {
   #ifdef ARDUINO 
-  uint_dmxValue result = pgm_read_byte(&(proztable[value][gamma]));
+  return pgm_read_byte(&(proztable[value][gamma]));
   #else
-  uint_dmxValue result = proztable[value][gamma];
-  #endif
-  if ((value > 0) && (result == 0)) {
-    result = DIMMER_START_LEVEL;
-  }
-  return result;
-  
+  return proztable[value][gamma];
+  #endif  
 }
 #endif
