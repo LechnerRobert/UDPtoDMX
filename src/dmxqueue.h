@@ -30,7 +30,7 @@ class dmxqueueClass
     void Register_OnStop(event_queueState callback);
 
     void init();
-    bool add(uint_dmxChannel channel, uint8_t dimSpeed, uint_dmxValue dimTo, uint8_t gamma, bool isPercent);
+    uint8_t add(uint_dmxChannel channel, uint8_t dimSpeed, uint_dmxValue dimTo, uint8_t gamma, bool isPercent);
     void update(uint_dmxChannel channel, uint8_t dimSpeed, bool doUpdate);
     dimItem* GetItem(int channel);
     void stop(uint_dmxChannel channel);

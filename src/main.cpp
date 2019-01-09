@@ -35,6 +35,23 @@ uint8_t minus10(uint16_t value) {
   return min(100, value * 100 / (100 - proz10));
 }
 
+#define onOffthreshold 10
+
+uint8_t scaleSpeed(uint8_t sp, uint8_t dx, uint8_t dmax) {
+  if (dx == 0) {
+    return sp;
+  } else {    
+    uint16_t ret = sp % 100;
+    ret = ret * dmax / dx;
+    if (sp < 100) { 
+      ret = min(ret, uint16_t(99));
+    } else {
+      ret = min(ret, uint16_t(50));
+    }
+    return ret + (sp - (sp % 100));
+  } 
+}
+
 void networkData(char *data, int datalen){
    int p1 = 0;
    uint_dmxChannel startChannel = 0;
@@ -42,6 +59,7 @@ void networkData(char *data, int datalen){
    uint8_t updSp = 0;
    uint8_t onoffSpeed = 0;
    uint8_t gamma = 0;
+   uint8_t d1, d2, d3, dmax = 0;
    bool isOnOff = false;
 
    if ((datalen > 3) && 
@@ -78,25 +96,43 @@ void networkData(char *data, int datalen){
      }
      
      if  (data[0 + 3] == 'R') {
-       isOnOff = queue.add(startChannel, updSp, newValue % 1000, gamma, true);
+       d1 = queue.add(startChannel, updSp, newValue % 1000, gamma, true); //RED
        newValue = newValue / 1000;
-       isOnOff = queue.add(startChannel + 1, updSp, newValue % 1000, gamma, true) | isOnOff;
+       d2 = queue.add(startChannel + 1, updSp, newValue % 1000, gamma, true); //GREEN
        newValue = newValue / 1000;
-       isOnOff = queue.add(startChannel + 2, updSp, newValue % 1000, gamma, true) | isOnOff;
-       queue.update(startChannel, onoffSpeed, isOnOff);
-       queue.update(startChannel + 1, onoffSpeed, isOnOff);
-       queue.update(startChannel + 2, onoffSpeed, isOnOff);
+       d3 = queue.add(startChannel + 2, updSp, newValue % 1000, gamma, true); //BLUE
+       isOnOff = (d1 > onOffthreshold) || (d2 > onOffthreshold) || (d3 > onOffthreshold);
+       if (!isOnOff) {
+         onoffSpeed  = updSp;
+         isOnOff = true; 
+       }
+       dmax = max(d1, d2);
+       dmax = max(d3, dmax);
+       DEBUG_BEGIN(LOG_INFO);
+       DEBUG_PRINT(F("RGB Speed: "));
+       DEBUG_PRINT(scaleSpeed(onoffSpeed, d1, dmax));
+       DEBUG_PRINT(F(" "));
+       DEBUG_PRINT(scaleSpeed(onoffSpeed, d2, dmax));
+       DEBUG_PRINT(F(" "));
+       DEBUG_PRINT(scaleSpeed(onoffSpeed, d3, dmax));
+       DEBUG_END();
+
+       queue.update(startChannel, scaleSpeed(onoffSpeed, d1, dmax), isOnOff);
+       queue.update(startChannel + 1, scaleSpeed(onoffSpeed, d2, dmax), isOnOff);
+       queue.update(startChannel + 2, scaleSpeed(onoffSpeed, d3, dmax), isOnOff);
      } else if  (data[0 + 3] == 'P') {
-       isOnOff = queue.add(startChannel, updSp, newValue, gamma, true);
+       isOnOff = queue.add(startChannel, updSp, newValue, gamma, true) > onOffthreshold;
        queue.update(startChannel, onoffSpeed, isOnOff);
      } else if  (data[0 + 3] == 'W') {
-       isOnOff = queue.add(startChannel, updSp, plus10(newValue), gamma, true);                                  /*CW*/
-       isOnOff = queue.add(startChannel + 1, updSp, minus10(newValue), gamma /*or gamma - 1*/, true) | isOnOff;  /*WW*/
+       d1 = queue.add(startChannel, updSp, plus10(newValue), gamma, true);                                  /*CW*/
+       d2 = queue.add(startChannel + 1, updSp, minus10(newValue), gamma /*or gamma - 1*/, true);            /*WW*/
+       isOnOff = (d1 > onOffthreshold) || (d2 > onOffthreshold);
        queue.update(startChannel, onoffSpeed, isOnOff);
        queue.update(startChannel + 1, onoffSpeed, isOnOff);
      } else if  (data[0 + 3] == 'V') {
-       isOnOff = queue.add(startChannel, updSp, minus10(newValue), gamma /*or gamma - 1*/, true);
-       isOnOff = queue.add(startChannel + 1, updSp, plus10(newValue), gamma, true) | isOnOff;       
+       d1 = queue.add(startChannel, updSp, minus10(newValue), gamma /*or gamma - 1*/, true);
+       d2 = queue.add(startChannel + 1, updSp, plus10(newValue), gamma, true);       
+       isOnOff = (d1 > onOffthreshold) || (d2 > onOffthreshold);
        queue.update(startChannel, onoffSpeed, isOnOff);
        queue.update(startChannel + 1, onoffSpeed, isOnOff);
      } else if  (data[0 + 3] == 'S') {
@@ -105,8 +141,8 @@ void networkData(char *data, int datalen){
        };
 //     stress = true;
      } else {
-       isOnOff = queue.add(startChannel, updSp, newValue, 0, false);
-       queue.update(startChannel, onoffSpeed, isOnOff);
+       queue.add(startChannel, updSp, newValue, 0, false);
+       /*queue.update(startChannel, onoffSpeed, isOnOff);*/
      }
   }
      

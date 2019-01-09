@@ -37,7 +37,7 @@ void dmxqueueClass::update(uint_dmxChannel channel, uint8_t dimSpeed, bool doUpd
   }
 } 
 
-bool dmxqueueClass::add(uint_dmxChannel channel, uint8_t dimSpeed, uint_dmxValue dimTo, uint8_t gamma, bool isPercent) { 
+uint8_t dmxqueueClass::add(uint_dmxChannel channel, uint8_t dimSpeed, uint_dmxValue dimTo, uint8_t gamma, bool isPercent) { 
   int q = -1;
   uint16_t ch;
   int first = -1;  
@@ -79,19 +79,19 @@ bool dmxqueueClass::add(uint_dmxChannel channel, uint8_t dimSpeed, uint_dmxValue
   }
      
    
-      bool ret = false;
+      uint8_t ret = 0;
       
       intQueue[q].wait = 0;
       intQueue[q].waitUp = false;
       if (dimTo < intQueue[q].dimTo) {
-        ret = ((intQueue[q].dimTo - dimTo) > 10);
+        ret = (intQueue[q].dimTo - dimTo);
         intQueue[q].wait = 2;
         intQueue[q].waitUp = false;
         if (!intQueue[q].aktiv) {
           intQueue[q].dimtime = 0xFFFF;
         }
       } else if (dimTo > intQueue[q].dimTo) {
-        ret = ((dimTo - intQueue[q].dimTo) > 10);
+        ret = (dimTo - intQueue[q].dimTo);
         intQueue[q].wait = 2;
         intQueue[q].waitUp = true;
       };
@@ -103,6 +103,9 @@ bool dmxqueueClass::add(uint_dmxChannel channel, uint8_t dimSpeed, uint_dmxValue
       intQueue[q].dimTo = dimTo;
       intQueue[q].gamma = gamma;
       intQueue[q].isPercent = isPercent;
+      if (!isPercent) {
+        ret = 0;
+      }
 
       if (!intQueue[q].aktiv) {
         intQueue[q].aktiv = true;
