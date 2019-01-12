@@ -38,7 +38,7 @@ uint8_t minus10(uint16_t value) {
 #define onOffthreshold 10
 
 uint8_t scaleSpeed(uint8_t sp, uint8_t dx, uint8_t dmax) {
-  if ((dx == 0) || (sp = 255)) {
+  if ((dx == 0) || (sp == 255)) {
     return sp;
   } else {    
     uint16_t ret = sp % 100;
