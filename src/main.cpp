@@ -38,18 +38,28 @@ uint8_t minus10(uint16_t value) {
 #define onOffthreshold 10
 
 uint8_t scaleSpeed(uint8_t sp, uint8_t dx, uint8_t dmax) {
-  if ((dx == 0) || (sp == 255)) {
+  if ((dx == 0) || (sp == 255) || (dx == dmax)) {
     return sp;
-  } else {    
-    uint16_t ret = sp % 100;
-    ret = ret * dmax / dx;
-    if (sp < 200) { 
-      ret = min(ret, uint16_t(99));
-    } else {
-      ret = min(ret, uint16_t(54));
+  } else {
+    uint8_t f = 1;
+    if (sp < 100) {
+      f = 8;
+    } else if (sp < 200) {
+      f = 2;
     }
-    return ret + (sp - (sp % 100));
-  } 
+    uint16_t ret = sp % 100;
+    ret = ret * f * dmax / dx;
+    if (ret > 54) {
+      ret = ret / 2;
+      if (ret > 99) {
+        return min((ret / 4),99);
+      } else {
+        return 100 + (int) ret;
+      }
+    } else {
+      return 200 + ret;
+    }  
+  }
 }
 
 void networkData(char *data, int datalen){
