@@ -44,9 +44,9 @@ uint8_t scaleSpeed(uint8_t sp, uint8_t dx, uint8_t dmax) {
     uint16_t ret = sp % 100;
     ret = ret * dmax / dx;
     if (sp < 200) { 
-      ret = min(ret, uint16_t(99));
+      ret = min(ret, (uint16_t) 99);
     } else {
-      ret = min(ret, uint16_t(54));
+      ret = min(ret, (uint16_t) 54);
     }
     return ret + (sp - (sp % 100));
   } 
