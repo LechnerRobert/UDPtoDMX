@@ -1,10 +1,14 @@
-#if USE_W5100 == 1
+#if (USE_W5100 == 1) || (USE_ENC28j60==1)
 
 #include "network.h"
 #include "log.h"
+#if (USE_W5100 == 1)
 #include <Ethernet.h>
 #include <EthernetUdp.h>
-
+#else
+#include <UIPEthernet.h>
+#include <UIPUdp.h>
+#endif
 EthernetUDP udp;
 
 #if USE_EEPROM_MAC == 1
