@@ -40,26 +40,21 @@ uint8_t minus10(uint16_t value) {
 uint8_t scaleSpeed(uint8_t sp, uint8_t dx, uint8_t dmax) {
   if ((dx == 0) || (sp == 255) || (dx == dmax)) {
     return sp;
-  } else {
+  } else {    
     uint8_t f = 1;
-    if (sp < 100) {
-      f = 8;
-    } else if (sp < 200) {
+    float q = (float) dmax / (float) dx;
+    uint8_t t = sp * q * 2;
+    uint8_t offset = 0;
+    // switch to smaller dim steps if possible
+    if (t <= 27) {
+      f = 4;
+      offset = 200;
+    } else if (t < 100) {
       f = 2;
+      offset = 100;
     }
-float ret = sp % 100;
-    ret = ret * f * ((float) dmax / dx);
-    if (ret > 54) {
-      ret = ret / 2;
-      if (ret > 99) {
-        return min((ret / 4),99);
-      } else {
-        return 100 + ret;
-      }
-    } else {
-      return 200 + ret;
-    }
-  }
+    return sp * f * q + offset;
+  } 
 }
 
 void networkData(char *data, int datalen){

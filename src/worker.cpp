@@ -49,9 +49,9 @@ void workerClass::step() {
           chStep = 1;  
         }
         if (queueItem->dimSpeed >= 200) {
-          chInc = 8;
-        } else if (queueItem->dimSpeed >= 100) {
           chInc = 4;
+        } else if (queueItem->dimSpeed >= 100) {
+          chInc = 2;
         }  else {
           chInc = 1;
         }  
